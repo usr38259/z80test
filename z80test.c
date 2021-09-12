@@ -1,9 +1,5 @@
 
 #include <stdio.h>
-//#include <string.h>
-//#include <memory.h>
-//#include <io.h>
-//#include <conio.h>
 #include "z80.h"
 
 #define TEXT_BIN "zexall.com"
