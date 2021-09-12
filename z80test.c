@@ -15,7 +15,6 @@ int _CRTAPI1 main ()
 {
 	FILE *f;
 	long fl;
-	unsigned short sp, pc;
 	int i;
 
 	z80_cpu_init (&z80);
@@ -52,7 +51,6 @@ int _CRTAPI1 main ()
 			break;
 		default: puts ("Unsupported BDOS call"); return 0;
 		}
-		pc = z80.pc.w.l; sp = z80.sp.w.l;
 		z80_cpu_execute (&z80);
 	}
 	return 0;
