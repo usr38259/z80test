@@ -54,6 +54,5 @@ int _CRTAPI1 main ()
 		z80_cpu_execute (&z80);
 	}
 
-	z80_cpu_exit (&z80);
 	return 0;
 }
