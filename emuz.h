@@ -10,7 +10,7 @@
 #define UINT32 unsigned int
 #define INT32 int
 //#define PAIR unsigned short
-#define INLINE __inline
+#define INLINE //__inline
 #define TRUE 1
 #define FALSE 0
 
@@ -27,11 +27,11 @@ typedef union PAIR_u {
 } PAIR;
 
 UINT8 read_byte(UINT32 addr);
-io_read_byte(port);
-io_write_byte(port, value);
+io_read_byte(int port);
+io_write_byte(int port, int value);
 program_write_byte(UINT32 addr, UINT8 value);
-direct_read_decrypted_byte(pc);
-direct_read_raw_byte(pc);
+direct_read_decrypted_byte(int pc);
+direct_read_raw_byte(int pc);
 int __cdecl logerror (const char* s, ...);
 
 #endif /* __EMUZ_H__ */

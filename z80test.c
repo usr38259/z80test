@@ -1,15 +1,31 @@
 
 #include <stdio.h>
+#ifdef __linux__
+#include <sys/stat.h>
+#endif
+
 #include "z80.h"
 
 #define TEXT_BIN "zexall.com"
 
+#ifdef _WIN32
 #ifndef _CRTAPI1
 #define _CRTAPI1 __cdecl
+#endif
+#else
+#define _CRTAPI1
 #endif
 
 z80_state	z80;
 unsigned char mem [65536];
+
+#ifdef __linux__
+long file_length (FILE *f);
+#define PUTCH putchar
+#else
+#define file_length(f) filelength(fileno(f))
+#define PUTCH putch
+#endif
 
 int _CRTAPI1 main ()
 {
@@ -25,13 +41,13 @@ int _CRTAPI1 main ()
 		puts ("BIN file '" TEXT_BIN "' open error");
 		return 1;
 	}
-	fl = filelength (fileno (f));
+	fl = file_length (f);
 	if (fl <= 0 || fl > 49152) {
 		puts ("File length error");
 		fclose (f);
 		return 1;
 	}
-	if (fread (mem + 0x100, filelength (fileno (f)), 1, f) != 1) {
+	if (fread (mem + 0x100, fl, 1, f) != 1) {
 		puts ("BIN file read error");
 		fclose (f);
 		return 1;
@@ -46,8 +62,8 @@ int _CRTAPI1 main ()
 	while (1) {
 		if (z80.pc.w.l == 0) break;
 		if (z80.pc.w.l == 5) switch (z80.bc.b.l) {
-		case 2: putch (z80.de.b.l); break;
-		case 9: for (i = z80.de.w.l; mem[i] != '$'; i ++) putch (mem[i]);
+		case 2: PUTCH (z80.de.b.l); break;
+		case 9: for (i = z80.de.w.l; mem[i] != '$'; i ++) PUTCH (mem[i]);
 			break;
 		default: puts ("Unsupported BDOS call"); return 0;
 		}
@@ -56,3 +72,13 @@ int _CRTAPI1 main ()
 
 	return 0;
 }
+
+#ifdef __linux__
+long file_length (FILE *f)
+{
+	struct stat st;
+	if (fstat (fileno (f), &st) != 0)
+		return -1;
+	return st.st_size;
+}
+#endif
